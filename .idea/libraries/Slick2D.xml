@@ -1,0 +1,24 @@
+<component name="libraryTable">
+  <library name="Slick2D">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Slick2D/lib/lwjgl_util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Slick2D/lib/lwjgl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Slick2D/lib/jinput.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Slick2D/lib/slick.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+      <root url="file://$PROJECT_DIR$/../../Slick2D" />
+    </NATIVE>
+    <SOURCES />
+  </library>
+</component>
