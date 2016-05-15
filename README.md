@@ -4,7 +4,9 @@ It is a demo game that includes my massive multiplayer game controller library. 
 Players will play the game with [Miner Controller mobile application](https://github.com/okanakdogan/Miner-Controller)
 
 Screenshot
-<p align="center">
-  <img src="http://s32.postimg.org/hoty6qsdx/game_SS1.png" width="350"/>
+![](http://s32.postimg.org/msksz3z1x/game_SS1.png)
+
+<p>
+  <img src="http://s32.postimg.org/msksz3z1x/game_SS1.png" width="500"/>
 </p>
 
