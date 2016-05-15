@@ -14,10 +14,8 @@ public class PlayerServer implements Runnable {
 
 
 
-    private int playerPort;
-
-    //private Thread mythread;
-    private ServerSocket serverSocket;
+    private int playerPort; //Dedicated port for mobile controller
+    private ServerSocket serverSocket; //connection listeber server socket
     private Socket clientSocket;
     private PrintWriter c_out;
     private BufferedReader c_in;

@@ -2,7 +2,6 @@
  * Created by Okan on 8.3.2016.
  */
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,7 +84,7 @@ public class SimpleSlickGame extends BasicGame
             if(p!=null){
 
                 p.getPlayerImage().draw(p.getPosition().getX(),p.getPosition().getY(),
-                        p.getImgWidth(),p.getImgHeigth());
+                        p.getImgWidth(),p.getImgHeight());
             }
         }
     }
