@@ -117,6 +117,13 @@ public class PlayerServer implements Runnable {
             }
         }
 
+        //delete player
+        if(player!=null)
+            gServer.getGame().removePlayer(player.getName());
+        //tell gameServer to remove me
+        gServer.removePlayerSever(this);
+        System.err.println("p removed");
+
         try {
             if(serverSocket!=null)
                 serverSocket.close();

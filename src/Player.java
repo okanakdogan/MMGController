@@ -1,6 +1,9 @@
+import org.lwjgl.util.vector.Matrix;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
+
+import java.util.Random;
 
 /**
  * Created by Okan on 8.4.2016.
@@ -21,6 +24,8 @@ public class Player implements inputHandler{
 
     private Point position;     //character position
     private boolean holdStatus; // hold status for character to take mines
+    private int points;
+    private SimpleSlickGame game;
 
     /**
      * Constructer of Player
@@ -29,11 +34,12 @@ public class Player implements inputHandler{
         try {
             //random player image load
 
-            //pImage = new Image("resources/player_img"+(new Random().nextInt(2)+1)+".png");
-            pImage = new Image("resources/yusufps.png");
-            scaleRatio =0.2f;
+            //pImage = new Image("resources/mineryusuf.png");
+            pImage = loadPlayerImage(new Random().nextInt(2));
+            scaleRatio =0.5f;
             imgHeight =(int) (pImage.getHeight()* scaleRatio);
             imgWidth=(int)(pImage.getWidth()* scaleRatio);
+            points=0;
         } catch (SlickException e) {
             e.printStackTrace();
             pImage=null;
@@ -110,6 +116,33 @@ public class Player implements inputHandler{
         System.out.println(name + " player message - "+in);
     }
 
+
+    public void pickUpMine(){
+
+        //check is there mine
+        float radius=50;
+        Point center = new Point(position.getX()+imgWidth/2, position.getY()+imgHeight/2);
+        synchronized (game.getMines()){
+            Mine[] mlist= game.getMines();
+            for(int m=0; m< mlist.length;++m){
+                if(mlist[m]==null)
+                    continue;
+
+                Point minePos = mlist[m].getPosition();
+                float dist = (float)Math.sqrt(Math.pow( minePos.getX()-center.getX(),2) + Math.pow(minePos.getY()-center.getY(),2));
+                if( dist<radius){
+                    //take it
+                    points += mlist[m].getValue();
+                    //remove mine
+                    mlist[m] = null;
+                    break;
+                }
+
+            }
+        }
+
+    }
+
     /**
      *
      * Takes action based on message which comes from Mobile Controller
@@ -118,7 +151,7 @@ public class Player implements inputHandler{
     @Override
     public void handleInput(String input) {
         String[] vals = input.split("/");
-        float sensivity=0.5f;
+        float sensivity=0.4f;
 
         // if message contains direction vector
         if(vals[0].equalsIgnoreCase("d")){
@@ -144,7 +177,10 @@ public class Player implements inputHandler{
         else if(vals[0].equalsIgnoreCase("br")) {
             //button released
             //printAction(vals[1]);
-            holdStatus=true;
+            holdStatus=false;
+            //call action
+            if(vals[1].equals("1"))
+                pickUpMine();
         }
         //Message contains setname
         else if(vals[0].equalsIgnoreCase("setN")){
@@ -168,5 +204,21 @@ public class Player implements inputHandler{
      */
     public int getImgWidth() {
         return imgWidth;
+    }
+
+    public void setGame(SimpleSlickGame game) {
+        this.game = game;
+    }
+
+    private Image loadPlayerImage(int index) throws SlickException {
+        if(index>=2)
+            index=0;
+        if(index==0){
+            return new Image("resources/mineryusuf.png");
+        }else if(index==1){
+            return new Image("resources/burak-miner.png");
+        }else
+            return null;
+
     }
 }
