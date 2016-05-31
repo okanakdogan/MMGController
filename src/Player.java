@@ -1,4 +1,3 @@
-import org.lwjgl.util.vector.Matrix;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Point;
@@ -25,36 +24,28 @@ public class Player implements inputHandler{
     private Point position;     //character position
     private boolean holdStatus; // hold status for character to take mines
     private int points;
-    private SimpleSlickGame game;
+    private MinerGame game;
 
     /**
      * Constructer of Player
      */
-    public Player(){
-        try {
-            //random player image load
+    public Player( String playerName,MinerGame game){
+        //random player image load
 
-            //pImage = new Image("resources/mineryusuf.png");
-            pImage = loadPlayerImage(new Random().nextInt(2));
-            scaleRatio =0.5f;
-            imgHeight =(int) (pImage.getHeight()* scaleRatio);
-            imgWidth=(int)(pImage.getWidth()* scaleRatio);
-            points=0;
-        } catch (SlickException e) {
-            e.printStackTrace();
-            pImage=null;
-        }
+        //pImage = new Image("resources/mineryusuf.png");
+        //pImage = loadPlayerImage(new Random().nextInt(3));
+        name=playerName;
+        this.game=game;
+        pImage=game.getPlayerImages().get(new Random().nextInt(3));
+        scaleRatio =0.5f;
+        imgHeight =(int) (pImage.getHeight()* scaleRatio);
+        imgWidth=(int)(pImage.getWidth()* scaleRatio);
+        points=0;
+
         position=new Point(80,80);
     }
 
-    /**
-     * Constructor with name parameter
-     * @param playerName
-     */
-    public Player(String playerName){
-        this();
-        name=playerName;
-    }
+
 
     /**
      * name getter
@@ -161,9 +152,9 @@ public class Player implements inputHandler{
             //setPosition
             float  X=getPosition().getX()-orient_x;
             float Y=getPosition().getY()-orient_y;
-            if (X >=0 && X<SimpleSlickGame.screen_width-imgWidth)
+            if (X >=0 && X< MinerGame.screen_width-imgWidth)
                 getPosition().setX(X);
-            if(Y >=0 && Y<SimpleSlickGame.screen_height- imgHeight)
+            if(Y >=0 && Y< MinerGame.screen_height- imgHeight)
                 getPosition().setY(Y);
 
         }
@@ -206,19 +197,24 @@ public class Player implements inputHandler{
         return imgWidth;
     }
 
-    public void setGame(SimpleSlickGame game) {
+    public void setGame(MinerGame game) {
         this.game = game;
     }
 
     private Image loadPlayerImage(int index) throws SlickException {
-        if(index>=2)
+        if(index>=3)
             index=0;
         if(index==0){
-            return new Image("resources/mineryusuf.png");
+            return new Image("resources/berkay-miner.png");
         }else if(index==1){
             return new Image("resources/burak-miner.png");
+        }else if(index==2){
+            return new Image("resources/yusuf-miner.png");
         }else
             return null;
+    }
 
+    public int getPoints() {
+        return points;
     }
 }

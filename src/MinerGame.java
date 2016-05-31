@@ -12,25 +12,26 @@ import org.lwjgl.Sys;
 import org.newdawn.slick.*;
 import org.newdawn.slick.geom.Point;
 
-public class SimpleSlickGame extends BasicGame
+public class MinerGame extends BasicGame
 {
     private GameServer gs;
     Image background;
-    Image[] playerImg;
     private ArrayList<Player> players;
     private Mine[] mines;
     private Mine.MineType[] mine_types;
     private Timer mineTimer;
+    private ArrayList<Image> playerImages;
 
+
+    private ArrayList<Image> mineImages;
 
     public static int screen_width=1024;
     public static int screen_height=640;
     public static int MINE_LIMIT =50;
     private Random random;
 
-    private Image yusufImage;
 
-    public SimpleSlickGame(String gamename)
+    public MinerGame(String gamename)
     {
         super(gamename);
     }
@@ -38,24 +39,35 @@ public class SimpleSlickGame extends BasicGame
     @Override
     public void init(GameContainer gc) throws SlickException {
 
-        int playerImgSize=3;
+
+        playerImages= new ArrayList<Image>();
+        mineImages = new ArrayList<Image>();
+
         background = new Image("resources/miner-background.png");
         Image temp = new Image("resources/navigation-icon.png");
-        temp = new Image("resources/coal-s.png");
-        temp = new Image("resources/silver-s.png");
-        temp = new Image("resources/gold-s.png");
-        temp = new Image("resources/burak-miner.png");
-        yusufImage = new Image("resources/mineryusuf.png");
-        playerImg= new Image[playerImgSize];
+/*
+        Image coal = new Image("resources/coal-s.png");
+        Image silver = new Image("resources/silver-s.png");
+        Image gold = new Image("resources/gold-s.png");
+*/
+        mineImages.add(new Image("resources/coal-s.png"));
+        mineImages.get(mineImages.size()-1).setName("coal");
+        mineImages.add(new Image("resources/silver-s.png"));
+        mineImages.get(mineImages.size()-1).setName("silver");
+        mineImages.add(new Image("resources/gold-s.png"));
+        mineImages.get(mineImages.size()-1).setName("gold");
+
+        playerImages.add(new Image("resources/burak-miner.png"));
+        playerImages.add(new Image("resources/berkay-miner.png"));
+        playerImages.add(new Image("resources/yusuf-miner.png"));
+
+        System.out.println( playerImages.size());
 
         mines = new Mine[MINE_LIMIT];
         mine_types =Mine.MineType.values();
         mineTimer = new Timer();
         mineTimer.schedule(new minerCreateTask(),5000);
-/*
-        for (int i=0;i< playerImgSize;++i){
-            playerImg[i]= new Image("resources/player_img"+(i+1)+".png");
-        }*/
+
 
         players = new ArrayList<Player>();
         random= new Random();
@@ -69,11 +81,7 @@ public class SimpleSlickGame extends BasicGame
     @Override
     public void update(GameContainer gc, int i) throws SlickException {
 
-
-        //random rock generate
-
-
-        //calculate scores
+        //other threads handles update
 
     }
 
@@ -104,10 +112,12 @@ public class SimpleSlickGame extends BasicGame
                 //position
                 Point pos = p.getPosition();
                 //draw name
-                g.drawString(p.getName(),pos.getX()+20,pos.getY()-5);
+                g.drawString(p.getName(),pos.getX()+20,pos.getY()-15);
 
                 p.getPlayerImage().draw(pos.getX(),pos.getY(),
                         p.getImgWidth(),p.getImgHeight());
+                //draw score
+                g.drawString(String.valueOf(p.getPoints()),pos.getX()+35,pos.getY()+p.getImgHeight()-10);
             }
         }
     }
@@ -139,27 +149,31 @@ public class SimpleSlickGame extends BasicGame
             e.printStackTrace();
         }
 
+        String hostaddress= "";
+
+        if(current_addr!=null)
+            hostaddress=current_addr.toString();
 
         try
         {
             AppGameContainer appgc;
-            appgc = new AppGameContainer(new SimpleSlickGame("Miner Game "+(current_addr.getHostAddress())));
+            appgc = new AppGameContainer(new MinerGame("Miner Game "+hostaddress));
             appgc.setDisplayMode(screen_width, screen_height, false);
             appgc.start();
 
         }
         catch (SlickException ex)
         {
-            Logger.getLogger(SimpleSlickGame.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MinerGame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public Player addPlayer(int uniqeid){
 
 
-        Player p = new Player("p-"+uniqeid);
+        Player p = new Player("p-"+uniqeid,this);
         p.setPosition(giveRandomPositionFromScreen());
-        p.setGame(this);
+
         players.add(p);
         return p;
     }
@@ -173,33 +187,6 @@ public class SimpleSlickGame extends BasicGame
 
     }
 
-    public void handleMessage(String e){
-
-        //parse
-        String[] parts= e.split("-");
-        // which player-command
-        String pname=parts[0];
-        String plyid=parts[1];
-        String command=parts[2];
-
-        //find player
-        Player p = findPlayerByName(players,pname+"-"+plyid);
-
-        if(p!=null){
-            //handle command
-            if (command.charAt(0)=='d'){
-                //get vector comp.
-                String[] comps = command.split("/");
-                Point pnt= p.getPosition();
-                p.setPosition(pnt.getX()+ Float.parseFloat(comps[0]),
-                        pnt.getY()+ Float.parseFloat(comps[1]));
-            }else if(command.charAt(0)=='b'){
-                int bindex = Character.getNumericValue(command.charAt(1));
-
-            }
-        }
-
-    }
 
     private Player findPlayerByName(ArrayList<Player> plist,String name){
 
@@ -216,8 +203,8 @@ public class SimpleSlickGame extends BasicGame
     }
 
     private Point giveRandomPositionFromScreen(){
-        random.setSeed(System.currentTimeMillis());
-        return new Point(random.nextInt(screen_width-50),random.nextInt(screen_height-50));
+        //random.setSeed(System.currentTimeMillis());
+        return new Point(random.nextInt((screen_width*3)/4),random.nextInt((screen_height*3)/4));
     }
 
 
@@ -228,14 +215,21 @@ public class SimpleSlickGame extends BasicGame
             synchronized (mines){
                 for (int m=0; m<MINE_LIMIT; ++m ){
                     if(mines[m]==null){
-                        mines[m]= new Mine( mine_types[random.nextInt(mine_types.length)],giveRandomPositionFromScreen());
+                        mines[m]= new Mine( mine_types[random.nextInt(mine_types.length)],giveRandomPositionFromScreen(),mineImages);
                         //System.out.println("Mine added");
                         break;
                     }
                 }
             }
-            mineTimer.schedule(new minerCreateTask(),3000);
+            mineTimer.schedule(new minerCreateTask(),1500);
         }
+    }
+
+    public ArrayList<Image> getPlayerImages() {
+        return playerImages;
+    }
+    public ArrayList<Image> getMineImages() {
+        return mineImages;
     }
 
 }

@@ -1,5 +1,3 @@
-import org.newdawn.slick.BasicGame;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +5,6 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -28,7 +25,7 @@ public class GameServer implements Runnable {
     private PrintWriter c_out;
     private BufferedReader c_in;
     private ArrayList<PlayerServer> pServers;
-    private SimpleSlickGame game;
+    private MinerGame game;
 
     //experimental
 
@@ -153,11 +150,11 @@ public class GameServer implements Runnable {
         return events;
     }
 
-    public void setGame(SimpleSlickGame game){
+    public void setGame(MinerGame game){
         this.game=game;
     }
 
-    public SimpleSlickGame getGame() {
+    public MinerGame getGame() {
         return game;
     }
 
