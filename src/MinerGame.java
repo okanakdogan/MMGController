@@ -29,7 +29,7 @@ public class MinerGame extends BasicGame
     public static int screen_height=640;
     public static int MINE_LIMIT =50;
     private Random random;
-
+    private int imgIndex=0;
 
     public MinerGame(String gamename)
     {
@@ -58,9 +58,9 @@ public class MinerGame extends BasicGame
         mineImages.get(mineImages.size()-1).setName("gold");
 
         playerImages.add(new Image("resources/burak-miner.png"));
-        playerImages.add(new Image("resources/berkay-miner.png"));
+        playerImages.add(new Image("resources/nurdan-miner.png"));
         playerImages.add(new Image("resources/yusuf-miner.png"));
-
+        playerImages.add(new Image("resources/berkay-miner.png"));
         System.out.println( playerImages.size());
 
         mines = new Mine[MINE_LIMIT];
@@ -221,7 +221,7 @@ public class MinerGame extends BasicGame
                     }
                 }
             }
-            mineTimer.schedule(new minerCreateTask(),1500);
+            mineTimer.schedule(new minerCreateTask(),500);
         }
     }
 
@@ -230,6 +230,16 @@ public class MinerGame extends BasicGame
     }
     public ArrayList<Image> getMineImages() {
         return mineImages;
+    }
+
+    public int giveNextImageIndex(){
+
+        if(imgIndex<playerImages.size()-1){
+            imgIndex++;
+        }else{
+            imgIndex=0;
+        }
+        return imgIndex;
     }
 
 }

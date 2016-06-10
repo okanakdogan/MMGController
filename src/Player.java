@@ -36,7 +36,7 @@ public class Player implements inputHandler{
         //pImage = loadPlayerImage(new Random().nextInt(3));
         name=playerName;
         this.game=game;
-        pImage=game.getPlayerImages().get(new Random().nextInt(3));
+        pImage=game.getPlayerImages().get(game.giveNextImageIndex());
         scaleRatio =0.5f;
         imgHeight =(int) (pImage.getHeight()* scaleRatio);
         imgWidth=(int)(pImage.getWidth()* scaleRatio);
